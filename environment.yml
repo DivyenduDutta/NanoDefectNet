@@ -3,9 +3,8 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - python=3.9
-  - pip:
-    - pandas==2.2.3
-    - numpy==2.0.2
-    - plotly==6.1.2
-    - pre-commit==4.2.0
+  - python=3.11
+  - pandas=2.2.3
+  - numpy=2.2.6
+  - plotly=6.1.2
+  - pre-commit=4.2.0
