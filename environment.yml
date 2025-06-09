@@ -8,3 +8,4 @@ dependencies:
   - numpy=2.2.6
   - plotly=6.1.2
   - pre-commit=4.2.0
+  - matplotlib=3.10.0
