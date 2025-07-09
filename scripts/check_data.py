@@ -10,6 +10,10 @@ LOGGER = LoggerConfig().logger
 
 
 def browse_and_display():
+    """
+    Open a file dialog to select an image and display it.
+
+    """
     filepath = filedialog.askopenfilename(
         title="Select an Image",
         filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.tiff")],
