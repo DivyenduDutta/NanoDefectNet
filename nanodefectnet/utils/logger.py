@@ -32,7 +32,9 @@ class LoggerConfig:
             return  # Prevent re-init
 
         self.logger_name = name
-        self.log_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+        self.log_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "logs"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         self.timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
