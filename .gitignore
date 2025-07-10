@@ -200,4 +200,4 @@ cython_debug/
 /data/*
 
 # Log folder
-/nanodefectnet/logs/
+/logs/
