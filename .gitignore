@@ -198,3 +198,6 @@ cython_debug/
 
 # Dataset directories
 /data/*
+
+# Log folder
+/logs/
