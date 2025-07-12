@@ -1,6 +1,4 @@
 import os
-import random
-import shutil
 from typing import Optional
 
 import numpy as np
@@ -11,32 +9,12 @@ from nanodefectnet.utils.logger import LoggerConfig
 
 LOGGER = LoggerConfig().logger
 
-# raw dataset path
-raw_dataset_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data", "raw", "LSWMD.pkl"
+from nanodefectnet.utils.constants import (
+    FAILURE_TYPE_TO_ID,
+    ID_TO_FAILURE_TYPE,
+    TRAIN_TEST_TO_ID,
 )
-
-# processed dataset root path
-processed_dataset_root = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data", "processed"
-)
-
-FAILURE_TYPE_TO_ID = {
-    "Center": 0,
-    "Donut": 1,
-    "Edge-Loc": 2,
-    "Edge-Ring": 3,
-    "Loc": 4,
-    "Random": 5,
-    "Scratch": 6,
-    "Near-full": 7,
-    "none": 8,
-}
-
-ID_TO_FAILURE_TYPE = {v: k for k, v in FAILURE_TYPE_TO_ID.items()}
-
-TRAIN_TEST_TO_ID = {"Training": 0, "Test": 1}
-ID_TO_TRAIN_TEST = {v: k for k, v in TRAIN_TEST_TO_ID.items()}
+from nanodefectnet.utils.dir_utils import clean_create_dir
 
 
 def read_raw_dataset(
@@ -207,37 +185,6 @@ def convert_pixel_classes_to_channels(
     return df
 
 
-def clean_create_dir(path_dir: str) -> None:
-    """
-    Delete the existing processed dataset directory and create a new one.
-
-    Args:
-        path_dir (str): The path to the directory to be cleaned and created.
-
-    Raises:
-        OSError: If the directory cannot be deleted or created.
-    """
-
-    CHECK_FOLDER = os.path.isdir(path_dir)
-    if CHECK_FOLDER:
-        LOGGER.info("The directory '{}' exists. Delete it".format(path_dir))
-        try:
-            shutil.rmtree(path_dir)
-        except OSError as e:
-            LOGGER.error("Error: {}".format(e.strerror))
-            raise e
-
-        CHECK_FOLDER = os.path.isdir(path_dir)
-        if not CHECK_FOLDER:
-            LOGGER.info("Create the directory '{}'".format(path_dir))
-            os.makedirs(path_dir)
-        else:
-            raise OSError(f"Error: The directory '{path_dir}' was not deleted")
-    else:
-        LOGGER.info("Create the directory '{}'".format(path_dir))
-        os.makedirs(path_dir)
-
-
 def save_wafer_images(df: pd.DataFrame, split_name: str, output_dir: str) -> None:
     """
     Saves waferMaps from a DataFrame as images into subfolders based on their failure type.
@@ -310,6 +257,16 @@ def make_train_val_test_split(
 
 
 if __name__ == "__main__":
+
+    # raw dataset path
+    raw_dataset_path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "data", "raw", "LSWMD.pkl"
+    )
+
+    # processed dataset root path
+    processed_dataset_root = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "data", "processed"
+    )
 
     # 1 - clean and create the dataset directory
     clean_create_dir(processed_dataset_root)
