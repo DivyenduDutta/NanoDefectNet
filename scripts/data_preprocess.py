@@ -205,7 +205,7 @@ def save_wafer_images(df: pd.DataFrame, split_name: str, output_dir: str) -> Non
         subfolder = os.path.join(output_dir, split_name, failure_type)
         os.makedirs(subfolder, exist_ok=True)
 
-        filename = f"{lot}_{wafer}.png"
+        filename = f"{lot}_{wafer.split('.')[0]}.png"
         filepath = os.path.join(subfolder, filename)
 
         Image.fromarray(img).save(filepath)
