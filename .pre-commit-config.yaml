@@ -21,11 +21,6 @@ repos:
     hooks:
       - id: mypy
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
-    hooks:
-      - id: isort
-
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.1
     hooks:
