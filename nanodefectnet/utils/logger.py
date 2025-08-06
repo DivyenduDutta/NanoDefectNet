@@ -3,23 +3,11 @@ import os
 from datetime import datetime
 from typing import Optional
 
+from nanodefectnet.utils.singleton import SingletonMeta
 
-class LoggerConfig:
+
+class LoggerConfig(metaclass=SingletonMeta):
     """Singleton class for configuring and managing a logger."""
-
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        """
-        This method implements the singleton pattern to ensure that
-        the logger configuration is consistent throughout the application.
-
-        Args:
-            cls: The class itself.
-        """
-        if not cls._instance:
-            cls._instance = super(LoggerConfig, cls).__new__(cls)
-        return cls._instance
 
     def __init__(self, name: Optional[str] = "nanodefectnet"):
         """
@@ -28,8 +16,6 @@ class LoggerConfig:
         Args:
             name (str): The name of the logger. Default is "nanodefectnet".
         """
-        if hasattr(self, "_initialized") and self._initialized:  # type: ignore[has-type]
-            return  # Prevent re-init
 
         self.logger_name = name
         self.log_dir = os.path.join(
@@ -83,3 +69,9 @@ class LoggerConfig:
         Returns the configured logger instance.
         """
         return self._logger
+
+
+if __name__ == "__main__":
+    logger1 = LoggerConfig().logger
+    logger2 = LoggerConfig().logger
+    assert logger1 is logger2, "LoggerConfig is not a singleton"
