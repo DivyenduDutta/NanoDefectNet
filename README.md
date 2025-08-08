@@ -8,3 +8,5 @@ Add the project root ie, Folder containing this README to PYTHONPATH whichever w
 PYTHONPATH=\full\path\to\projectroot
 ```
 And place this .env file in the project root. Works for VS Code.
+
+Another option would be to run `$env:PYTHONPATH = \full\path\to\projectroot` in powershell to set the env variable and then run the scripts.

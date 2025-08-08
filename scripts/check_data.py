@@ -9,7 +9,7 @@ from nanodefectnet.utils.logger import LoggerConfig
 LOGGER = LoggerConfig().logger
 
 
-def browse_and_display():
+def browse_and_display() -> None:
     """
     Open a file dialog to select an image and display it.
 
