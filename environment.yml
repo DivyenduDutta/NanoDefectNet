@@ -13,3 +13,4 @@ dependencies:
   - scikit-image=0.25.2
   - pip
   - albumentations=2.0.7
+  - opencv=4.10.0
