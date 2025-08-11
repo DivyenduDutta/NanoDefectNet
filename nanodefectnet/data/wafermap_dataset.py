@@ -11,7 +11,7 @@ class WafermapDataset(Dataset):
         self.df_dataset = df_dataset
         self.dataset_path = dataset_path
         self.cfg = cfg
-        self.do_resize = cfg["data"].get("do_resize", 1.0) > 0.0
+        self.do_resize = cfg["data"].get("do_resize", True)
 
     def __len__(self):
         return len(self.df_dataset)

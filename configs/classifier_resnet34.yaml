@@ -10,13 +10,13 @@ model:
   learning_rate: 0.001
   scheduler_step_size: 10
   scheduler_gamma: 0.1
-  freeze_layers: 1
+  freeze_layers: true
   epoch_start_unfreeze: 10
   #layer_start_unfreeze: 0
   n_nodes: 256
   dropout: 0.3
-  do_train: 1
-  do_test: 1
+  do_train: true
+  do_test: true
 data:
-  do_resize: 1
+  do_resize: true
   size: 224
