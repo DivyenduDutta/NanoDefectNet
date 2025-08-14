@@ -1,0 +1,35 @@
+dataset:
+  root_dataset_path: ./data/processed/
+  path_dataset_train: train_augmented
+  path_dataset_val: val
+  path_dataset_test: test
+  batch_size: 32
+model:
+  model_name: resnet152
+  saving_dir_experiments: ./checkpoints/resnet152/
+  saving_dir_model: models
+  num_classes: 7
+  num_epoch: 15
+  lr:
+    fcn: 0.001
+    layer4: 0.0005
+    layer3: 0.0001
+    layer2: 0.00005
+    layer1: 0.00001
+    overall: 0.001
+  scheduler:
+    T_0: 5
+    T_mult: 2
+    eta_min: 0.000001
+  unfreeze_strategy: progressive
+  epoch_start_unfreeze_layer4: 5
+  epoch_start_unfreeze_layer3: 10
+  epoch_start_unfreeze_layer2: 15
+  n_nodes: 256
+  weight_decay: 0.01
+  dropout: 0.3
+  do_train: true
+  do_test: true
+data:
+  do_resize: true
+  size: 224
