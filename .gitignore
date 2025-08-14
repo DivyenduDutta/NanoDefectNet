@@ -201,3 +201,7 @@ cython_debug/
 
 # Log folder
 /logs/
+
+# Model output directories
+/checkpoints/
+/lightning_logs/
