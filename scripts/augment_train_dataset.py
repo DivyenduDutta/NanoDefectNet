@@ -62,6 +62,11 @@ def make_data_augmentation(
                 n_applications < 0
             ):  # if we already have more than the final number of augmented images
                 n_applications = 0
+
+            if n_applications > 3:  # if we have more than 3 applications, limit to 3
+                # TODO: remove this limit once we have more data augmentations added
+                n_applications = 3
+
             LOGGER.info(
                 f"Number of applications for data augmentation: {n_applications}"
             )
