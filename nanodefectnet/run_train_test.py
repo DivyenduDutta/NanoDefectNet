@@ -4,7 +4,7 @@ from shutil import copy
 
 from nanodefectnet.utils.logger import LoggerConfig
 from nanodefectnet.utils.config_utils import load_config
-from nanodefectnet.src.train_test_classification_model import run_train_test_model
+from nanodefectnet.core.train_test_classification_model import run_train_test_model
 
 LOGGER = LoggerConfig().logger
 
