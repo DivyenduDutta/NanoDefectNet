@@ -205,3 +205,4 @@ cython_debug/
 # Model output directories
 /checkpoints/
 /lightning_logs/
+*.ckpt
