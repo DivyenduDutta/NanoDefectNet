@@ -1,0 +1,9 @@
+base_path : assets/trained_models
+resnet152:
+  model_path: resnet152/resnet152-model-epoch=epoch=13-val_loss=val_loss=0.8650.ckpt
+efficientnet_b4:
+  model_path: efficientnet_b4.pth
+cct:
+  model_path: cct.pth
+data:
+  size: 224

@@ -6,14 +6,19 @@ import matplotlib.pyplot as plt
 from torch import nn
 from torchvision import models
 from torchvision.models import ResNet152_Weights
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import lightning as pl
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-from nanodefectnet.model.base import Model
+from nanodefectnet.model.base import Model, ModelInference
 from nanodefectnet.data.dataloader import create_loaders
+from nanodefectnet.utils.constants import ACTUAL_ID_TO_FAILURE_TYPE
+
+#################################################################
+# TRAINING VALIDATION TEST SECTION                              #
+#################################################################
 
 
 class Resnet152Module(pl.LightningModule):
@@ -315,7 +320,36 @@ class Resnet152Model(Model):
         _, _, test_dataloader = create_loaders(self.config)
         self.trainer.test(self.model, test_dataloader)
 
-    def predict(self, input_image) -> np.ndarray:
+    def get_params(self) -> Dict:
+        return self.model.parameters()
+
+
+#################################################################
+# INFERENCE SECTION                                             #
+#################################################################
+
+
+class Resnet152ModuleInference(pl.LightningModule):
+    def __init__(self, num_classes):
+        super().__init__()
+        self.model = models.resnet152(
+            weights=None
+        )  # because for inference we use weights from the trained model
+        num_ftrs = self.model.fc.in_features
+        self.model.fc = nn.Linear(num_ftrs, num_classes)
+
+    def forward(self, x):
+        return self.model(x)
+
+
+class Resnet152ModelInference(ModelInference):
+    def __init__(self, num_classes: int):
+        self.model = Resnet152ModuleInference(num_classes)
+
+    def load_state_dict(self, state_dict: Dict):
+        self.model.load_state_dict(state_dict, strict=False)
+
+    def predict(self, input_image) -> Tuple[float, str]:
         self.model.eval()
         device = next(self.model.parameters()).device
         input_image = input_image.to(device)
@@ -323,8 +357,10 @@ class Resnet152Model(Model):
             input_image = input_image.unsqueeze(0)
         with torch.no_grad():
             logit = self.model(input_image)
-            pred = torch.argmax(logit, dim=1)
-        return pred.cpu().numpy()
-
-    def get_params(self) -> Dict:
-        return self.model.parameters()
+            preds = torch.nn.Softmax(dim=1)(logit)
+            pred_values, pred_labels = torch.max(preds, 1)
+        predicted_score = round(pred_values.cpu().numpy().tolist()[0], 4)
+        predicted_class = ACTUAL_ID_TO_FAILURE_TYPE[
+            pred_labels.cpu().numpy().tolist()[0]
+        ]
+        return predicted_score, predicted_class

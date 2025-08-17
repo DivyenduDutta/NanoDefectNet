@@ -23,5 +23,16 @@ Run `python scripts/augment_train_data.py`
 
 ##### Training
 
-For Resnet model:
+For ResNet model:
 Run `python .\nanodefectnet\run_train_test.py --path_config_file .\configs\classifier_resnet152_aug.yaml`
+
+##### Inference
+
+For ResNet model:
+Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/test_images/center_defect.png`
+
+#### API
+
+Start the REST server using `uvicorn nanodefectnet.server.main:app --reload`
+
+Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/predict-waferdefect?model_name=ResNet152" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@D:/Computer Vision/Projects/NanoDefectNet/assets/test_images/center_defect.png"`

@@ -33,12 +33,18 @@ def create_loaders(cfg):
             [
                 transforms.Resize((cfg["data"]["size"], cfg["data"]["size"])),
                 transforms.ToTensor(),
+                transforms.Normalize(  # imagenet normalization
+                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+                ),
             ]
         )
     else:
         basic_transform = transforms.Compose(
             [
                 transforms.ToTensor(),
+                transforms.Normalize(  # imagenet normalization
+                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+                ),
             ]
         )
 
