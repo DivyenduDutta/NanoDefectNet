@@ -12,7 +12,13 @@ dependencies:
   - mlflow=3.1.1
   - scikit-image=0.25.2
   - pip
+  # Albumentations for image augmentation
   - albumentations=2.0.7
   - opencv=4.10.0
   - lightning=2.5.1
   - types-PyYAML=6.0.12.20250809
+  # FastAPI and Uvicorn are included for web API setup
+  - fastapi=0.95.2
+  - uvicorn=0.35.0
+  - pydantic=2.11.7
+  - python-multipart=0.0.20
