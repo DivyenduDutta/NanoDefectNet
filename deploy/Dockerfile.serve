@@ -1,0 +1,16 @@
+FROM continuumio/miniconda3
+
+# Copy code and env file
+COPY nanodefectnet /home/NanodefectNet/nanodefectnet
+COPY environment.yml /home/NanodefectNet/
+COPY assets/trained_models/resnet152 /home/NanodefectNet/assets/trained_models/resnet152
+COPY configs/inference /home/NanodefectNet/configs/inference
+
+WORKDIR /home/NanodefectNet
+
+# Create environment
+RUN conda env create -f environment.yml
+ENV PATH /opt/conda/envs/ndnet/bin:$PATH
+
+# Default run command for FastAPI with uvicorn
+CMD ["uvicorn", "nanodefectnet.server.main:app", "--host", "0.0.0.0", "--port", "8000"]

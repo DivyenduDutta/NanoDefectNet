@@ -1,7 +1,7 @@
 # NanoDefectNet
 End-to-end deep learning app for detecting defects in semiconductor wafers
 
-Install pytorch, torchvision via `pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu118` - Issues when trying to install via environment.yaml file
+Install pytorch, torchvision via `pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu118` - Issues when trying to install via environment.yaml file
 
 Add the project root ie, Folder containing this README to PYTHONPATH whichever way you want. One way would be to create a .env and write the following in it
 ```
@@ -34,5 +34,13 @@ Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/t
 #### API
 
 Start the REST server using `uvicorn nanodefectnet.server.main:app --reload`
+
+Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/predict-waferdefect?model_name=ResNet152" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@D:/Computer Vision/Projects/NanoDefectNet/assets/test_images/center_defect.png"`
+
+#### Docker (for API inference only and NOT for training/validation/test pipeline)
+
+Build the image using `docker build -t nanodefectnet-app -f deploy/Dockerfile.serve .`
+
+Run docker image using `docker run --gpus all -p 8000:8000 nanodefectnet-app`
 
 Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/predict-waferdefect?model_name=ResNet152" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@D:/Computer Vision/Projects/NanoDefectNet/assets/test_images/center_defect.png"`
