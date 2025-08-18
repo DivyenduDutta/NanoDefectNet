@@ -18,7 +18,11 @@ dependencies:
   - lightning=2.5.1
   - types-PyYAML=6.0.12.20250809
   # FastAPI and Uvicorn are included for web API setup
-  - fastapi=0.95.2
+  - fastapi=0.116.0
   - uvicorn=0.35.0
   - pydantic=2.11.7
   - python-multipart=0.0.20
+  - pip:
+    - torch==2.6.0+cu118
+    - torchvision==0.21.0+cu118
+    - --extra-index-url https://download.pytorch.org/whl/cu118
