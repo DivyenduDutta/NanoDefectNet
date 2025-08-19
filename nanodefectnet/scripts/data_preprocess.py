@@ -260,12 +260,15 @@ if __name__ == "__main__":
 
     # raw dataset path
     raw_dataset_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "data", "raw", "LSWMD.pkl"
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        "data",
+        "raw",
+        "LSWMD.pkl",
     )
 
     # processed dataset root path
     processed_dataset_root = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "data", "processed"
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "processed"
     )
 
     # 1 - clean and create the dataset directory

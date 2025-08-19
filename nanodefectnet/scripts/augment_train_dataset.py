@@ -21,6 +21,30 @@ transform = A.Compose(
 )
 
 
+def _calculate_n_applications(
+    num_files: int, final_number: int, max_limit: int = 3
+) -> int:
+    """
+    Calculate the number of applications needed for an image per class for data augmentation.
+
+    Args:
+        num_files (int): The current number of files for the class.
+        final_number (int): The desired final number of files for the class.
+        max_limit (int, optional): The maximum number of applications allowed. Defaults to 3.
+
+    Returns:
+        int: The number of applications needed.
+    """
+    # if we have more than 3 applications, limit to 3
+    # TODO: remove this limit once we have more data augmentations added
+    n_applications = round((final_number - num_files) / num_files)
+    if (
+        n_applications < 0
+    ):  # if we already have more than the final number of augmented images
+        return 0
+    return min(n_applications, max_limit)
+
+
 def make_data_augmentation(
     train_dataset_root: str, augmented_train_dataset_root: str, final_number: int
 ) -> None:
@@ -57,15 +81,9 @@ def make_data_augmentation(
                 LOGGER.info("Create directory '{}'".format(path_aug_defect_class))
                 os.makedirs(path_aug_defect_class)
 
-            n_applications = round((final_number - number_files) / number_files)
-            if (
-                n_applications < 0
-            ):  # if we already have more than the final number of augmented images
-                n_applications = 0
-
-            if n_applications > 3:  # if we have more than 3 applications, limit to 3
-                # TODO: remove this limit once we have more data augmentations added
-                n_applications = 3
+            n_applications = _calculate_n_applications(
+                number_files, final_number, max_limit=3
+            )
 
             LOGGER.info(
                 f"Number of applications for data augmentation: {n_applications}"
@@ -110,7 +128,10 @@ if __name__ == "__main__":
 
     # train dataset root path
     train_dataset_root = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "data", "processed", "train"
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        "data",
+        "processed",
+        "train",
     )
 
     if not os.path.isdir(train_dataset_root):
@@ -119,7 +140,7 @@ if __name__ == "__main__":
 
     # augmented train dataset root path
     augmented_train_dataset_root = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
         "data",
         "processed",
         "train_augmented",
