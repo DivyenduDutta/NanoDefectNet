@@ -1,0 +1,9 @@
+base_path : tests/test_resources/checkpoints
+resnet152:
+  model_path: resnet152/models/resnet152-model.ckpt
+efficientnet_b4:
+  model_path: efficientnet_b4/models/efficientnet_b4.pth
+cct:
+  model_path: cct.pth
+data:
+  size: 224
