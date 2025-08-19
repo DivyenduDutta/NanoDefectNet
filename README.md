@@ -15,11 +15,11 @@ Execute `pip install ipykernel==6.30.1` beforing running the jupyter notebooks. 
 
 ##### Preprocessing
 
-Run `python scripts/data_preprocess.py`
+Run `python .\nanodefectnet\scripts\data_preprocess.py`
 
 ##### Data Augmentation
 
-Run `python scripts/augment_train_data.py`
+Run `python .\nanodefectnet\scripts\augment_train_data.py`
 
 ##### Training
 
@@ -44,3 +44,8 @@ Build the image using `docker build -t nanodefectnet-app -f deploy/Dockerfile.se
 Run docker image using `docker run --gpus all -p 8000:8000 nanodefectnet-app`
 
 Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/predict-waferdefect?model_name=ResNet152" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@D:/Computer Vision/Projects/NanoDefectNet/assets/test_images/center_defect.png"`
+
+
+#### Testing
+
+Run tests using `python -m pytest --no-cov .\tests\test_data_preprocess.py`
