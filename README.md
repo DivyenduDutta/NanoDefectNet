@@ -33,7 +33,7 @@ Run `python .\nanodefectnet\run_train_test.py --path_config_file .\configs\class
 ##### Inference
 
 For ResNet model:
-Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/test_images/center_defect.png`
+Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/test_images/center_defect.png --path_infer_config_file=configs/inference/infer.yaml`
 
 #### API
 
