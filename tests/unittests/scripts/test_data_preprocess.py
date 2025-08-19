@@ -13,14 +13,14 @@ from nanodefectnet.scripts.data_preprocess import read_raw_dataset
 
 # raw dataset path
 _RAW_DATASET_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
     "data",
     "raw",
     "LSWMD.pkl",
 )
 
 
-def test_read_raw_dataset():
+def test_read_raw_dataset() -> None:
     """
     Test the reading of the raw dataset into a pandas dataframe.
     """

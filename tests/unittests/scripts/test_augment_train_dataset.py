@@ -1,7 +1,7 @@
 from nanodefectnet.scripts.augment_train_dataset import _calculate_n_applications
 
 
-def test_calculate_n_applications():
+def test_calculate_n_applications() -> None:
     """
     Test the edge cases for calculating the number of applications needed for data augmentation.
     """
