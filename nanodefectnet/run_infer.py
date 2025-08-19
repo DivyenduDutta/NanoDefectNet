@@ -11,6 +11,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name", type=str, help="Name of the model to use")
     parser.add_argument("--image", type=str, help="Path to the image file")
+    parser.add_argument(
+        "--path_infer_config_file", type=str, help="Path to the inference config file"
+    )
     opt = parser.parse_args()
 
     # 1 - get model name
@@ -20,10 +23,15 @@ if __name__ == "__main__":
     image_path = opt.image
     LOGGER.info(f"Classifying wafermap image at: {image_path}")
 
+    inference_config_file_path = opt.path_infer_config_file
+    LOGGER.info(f"Using inference config file: {inference_config_file_path}")
+
     image = load_image(image_path)
 
     # 2 - run inference
     predicted_class, predicted_score = run_inference_model(
-        model_name=model_name, image=image
+        model_name=model_name,
+        image=image,
+        inference_config_file_path=inference_config_file_path,
     )
     LOGGER.info(f"Predicted class: {predicted_class}, Score: {predicted_score}")
