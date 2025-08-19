@@ -13,6 +13,10 @@ Another option would be to run `$env:PYTHONPATH = \full\path\to\projectroot` in 
 
 Execute `pip install ipykernel==6.30.1` beforing running the jupyter notebooks. And in case of `ValueError: Mime type rendering requires nbformat>=4.2.0 but it is not installed` error run `pip install jupyter`
 
+##### Sanity
+
+Before committing changes run `pre-commit run --all-files` or `pre-commit run --file <file1>, <file2> ...`
+
 ##### Preprocessing
 
 Run `python .\nanodefectnet\scripts\data_preprocess.py`
