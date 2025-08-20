@@ -1,10 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches: [ feature/ci ]
+  push: # this triggers on push events on all branches
   pull_request:
-    branches: [ feature/ci ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -27,14 +26,12 @@ jobs:
           auto-activate-base: false
 
       - name: Run pre-commit (linting/formatting/mypy etc)
-        working-directory: /home/NanoDefectNet
         shell: bash -l {0}
         run: |
           conda activate ndnet
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run tests
-        working-directory: /home/NanoDefectNet
         shell: bash -l {0}
         run: |
           conda activate ndnet
