@@ -1,18 +1,27 @@
 import torch
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Dict
 from torchvision import transforms
 
 from nanodefectnet.utils.logger import LoggerConfig
 from nanodefectnet.utils.constants import ModelType, ACTUAL_FAILURE_TYPE_TO_ID
 from nanodefectnet.model.resnet_based import Resnet152ModelInference
-from nanodefectnet.utils.config_utils import load_config
+from nanodefectnet.utils.config_utils import get_inference_config
 
 LOGGER = LoggerConfig().logger
 
 
-def _get_trained_model_path(model_name: str) -> str:
-    inference_config = load_config("configs/inference/infer.yaml")
+def get_trained_model_path(model_name: str, inference_config: Dict) -> str:
+    """
+    Get the path to the trained model for the specified model name.
+
+    Args:
+        model_name (str): Name of the model.
+        inference_config (Dict): Inference configuration dictionary.
+
+    Returns:
+        str: Path to the trained model.
+    """
 
     base_path = inference_config.get("base_path", "assets/trained_models")
 
@@ -58,10 +67,10 @@ def load_model(model_path, model_type=ModelType.RESNET152.value):
     return model
 
 
-def predict(model, image):
+def predict(model, image, inference_config):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # Apply transformations
-    transform = get_transform()
+    transform = get_transform(inference_config)
     image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
 
     image_tensor = image_tensor.to(device)
@@ -69,8 +78,7 @@ def predict(model, image):
     return model.predict(image_tensor)
 
 
-def get_transform():
-    inference_config = load_config("configs/inference/infer.yaml")
+def get_transform(inference_config: Dict) -> transforms.Compose:
     basic_transform = transforms.Compose(
         [
             transforms.ToPILImage(),  # because this transform pipeline expects a PIL image
@@ -86,7 +94,9 @@ def get_transform():
     return basic_transform
 
 
-def run_inference_model(model_name: str, image: np.ndarray) -> Tuple[str, float]:
+def run_inference_model(
+    model_name: str, image: np.ndarray, inference_config_file_path: str
+) -> Tuple[str, float]:
     """
     Function to run inference using the specified model.
 
@@ -95,7 +105,9 @@ def run_inference_model(model_name: str, image: np.ndarray) -> Tuple[str, float]
     """
     LOGGER.info(f"Running inference with model: {model_name}")
 
-    model_path = _get_trained_model_path(model_name)
+    inference_config = get_inference_config(inference_config_file_path)
+
+    model_path = get_trained_model_path(model_name, inference_config)
     model = load_model(model_path, model_type=model_name)
-    predicted_score, predicted_class = predict(model, image)
+    predicted_score, predicted_class = predict(model, image, inference_config)
     return predicted_class, predicted_score

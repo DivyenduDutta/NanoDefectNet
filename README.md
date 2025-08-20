@@ -13,13 +13,17 @@ Another option would be to run `$env:PYTHONPATH = \full\path\to\projectroot` in 
 
 Execute `pip install ipykernel==6.30.1` beforing running the jupyter notebooks. And in case of `ValueError: Mime type rendering requires nbformat>=4.2.0 but it is not installed` error run `pip install jupyter`
 
+##### Sanity
+
+Before committing changes run `pre-commit run --all-files` or `pre-commit run --file <file1>, <file2> ...`
+
 ##### Preprocessing
 
-Run `python scripts/data_preprocess.py`
+Run `python .\nanodefectnet\scripts\data_preprocess.py`
 
 ##### Data Augmentation
 
-Run `python scripts/augment_train_data.py`
+Run `python .\nanodefectnet\scripts\augment_train_data.py`
 
 ##### Training
 
@@ -29,7 +33,7 @@ Run `python .\nanodefectnet\run_train_test.py --path_config_file .\configs\class
 ##### Inference
 
 For ResNet model:
-Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/test_images/center_defect.png`
+Run `python .\nanodefectnet\run_infer.py --model_name=ResNet152 --image=assets/test_images/center_defect.png --path_infer_config_file=configs/inference/infer.yaml`
 
 #### API
 
@@ -44,3 +48,8 @@ Build the image using `docker build -t nanodefectnet-app -f deploy/Dockerfile.se
 Run docker image using `docker run --gpus all -p 8000:8000 nanodefectnet-app`
 
 Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/predict-waferdefect?model_name=ResNet152" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@D:/Computer Vision/Projects/NanoDefectNet/assets/test_images/center_defect.png"`
+
+
+#### Testing
+
+Run tests using `python -m pytest --no-cov .\tests\test_data_preprocess.py`

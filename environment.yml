@@ -23,6 +23,8 @@ dependencies:
   - pydantic=2.11.7
   - python-multipart=0.0.20
   - pip:
+    - pytest==8.3.5
+    - pytest-cov==6.2.0
     - torch==2.6.0+cu118
     - torchvision==0.21.0+cu118
     - --extra-index-url https://download.pytorch.org/whl/cu118

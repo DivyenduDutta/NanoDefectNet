@@ -32,7 +32,9 @@ async def predict_waferdefect(
     image_bytes = await file.read()
     image = load_image_from_bytes(image_bytes)
     predicted_class, predicted_score = run_inference_model(
-        model_name=model_name, image=image
+        model_name=model_name,
+        image=image,
+        inference_config_file_path="configs/inference/infer.yaml",
     )
     prediction = Prediction(label=predicted_class, prob=predicted_score)
     LOGGER.info(prediction)
