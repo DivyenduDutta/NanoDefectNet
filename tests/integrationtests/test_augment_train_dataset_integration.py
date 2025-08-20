@@ -21,6 +21,7 @@ def dummy_image(tmp_path):
     return tmp_path
 
 
+@pytest.mark.integration
 def test_make_data_augmentation_runs(dummy_image):
     """
     Test the data augmentation function.

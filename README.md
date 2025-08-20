@@ -52,4 +52,12 @@ Test using windows powershell:  `curl.exe -X POST "http://127.0.0.1:8000/api/pre
 
 #### Testing
 
-Run tests using `python -m pytest --no-cov .\tests\test_data_preprocess.py`
+Run only unit tests - `pytest -m unittest`
+
+Run only integration tests - `pytest -m integration`
+
+Run only tests that can be run on CI - `pytest -m runonci`
+
+Run ALL tests - `pytest`
+
+Note : Anytime a pytest marker is added to a pytest, ensure it is registered in `pytest.ini` otherwise pytest will complain

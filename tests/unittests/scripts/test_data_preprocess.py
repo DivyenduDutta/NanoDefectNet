@@ -8,6 +8,7 @@ and run tests locally.
 """
 
 import os
+import pytest
 
 from nanodefectnet.scripts.data_preprocess import read_raw_dataset
 
@@ -20,6 +21,7 @@ _RAW_DATASET_PATH = os.path.join(
 )
 
 
+@pytest.mark.unittest
 def test_read_raw_dataset() -> None:
     """
     Test the reading of the raw dataset into a pandas dataframe.
