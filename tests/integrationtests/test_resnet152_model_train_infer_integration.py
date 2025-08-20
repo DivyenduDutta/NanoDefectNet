@@ -47,6 +47,7 @@ def create_training_folders():
     shutil.rmtree(saving_dir_experiments, ignore_errors=True)
 
 
+@pytest.mark.integration
 @pytest.mark.usefixtures("create_training_folders")
 def test_resnet152_train_inference() -> None:
     """
