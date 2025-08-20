@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [ feature/ci ]
+  pull_request:
+    branches: [ feature/ci ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: ndnet
+          environment-file: environment.yml
+          python-version: 3.11
+          auto-activate-base: false
+
+      - name: Run pre-commit (linting/formatting/mypy etc)
+        shell: bash -l {0}
+        run: |
+          conda activate ndnet
+          pre-commit run --all-files --show-diff-on-failure
+
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+          conda activate ndnet
+          pytest -m runonci
