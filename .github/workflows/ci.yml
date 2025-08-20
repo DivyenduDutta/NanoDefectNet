@@ -9,9 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      HOME: /home/NanoDefectNet   # overrides default /home/runner
-      PYTHONPATH: /home/NanoDefectNet
 
     steps:
       - name: Checkout repository
