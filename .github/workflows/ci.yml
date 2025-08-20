@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  ci-checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
           activate-environment: ndnet
           environment-file: environment.yml
           python-version: 3.11
-          auto-activate-base: false
+          auto-activate: false
 
       - name: Run pre-commit (linting/formatting/mypy etc)
         shell: bash -l {0}
