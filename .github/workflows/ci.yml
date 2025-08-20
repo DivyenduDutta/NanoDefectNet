@@ -9,10 +9,17 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      HOME: /home/NanoDefectNet   # overrides default /home/runner
+      PYTHONPATH: /home/NanoDefectNet
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set PYTHONPATH
+        run: |
+          echo "PYTHONPATH=$PYTHONPATH:/home/NanoDefectNet" >> $GITHUB_ENV
 
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
@@ -23,12 +30,14 @@ jobs:
           auto-activate-base: false
 
       - name: Run pre-commit (linting/formatting/mypy etc)
+        working-directory: /home/NanoDefectNet
         shell: bash -l {0}
         run: |
           conda activate ndnet
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run tests
+        working-directory: /home/NanoDefectNet
         shell: bash -l {0}
         run: |
           conda activate ndnet
