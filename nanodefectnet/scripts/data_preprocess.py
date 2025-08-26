@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Dict
 
 import numpy as np
 import pandas as pd
@@ -215,6 +215,28 @@ def save_wafer_images(df: pd.DataFrame, split_name: str, output_dir: str) -> Non
     )
 
 
+def compute_class_percentages(df: pd.DataFrame) -> Dict:
+    """
+    Computes the percentage of each class in the provided wafer map.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing wafer map data.
+
+    Returns:
+        Dict: A dictionary with class names as keys and their percentages as values.
+    """
+    class_percentages = {}
+    num_classes = len(FAILURE_TYPE_TO_ID)
+
+    for i in range(num_classes):  # For each wafermap defect class
+        class_mask = df[df["failureNum"] == i]
+        class_percentages[f"{ID_TO_FAILURE_TYPE[i]}_{i}"] = (
+            len(class_mask) / len(df) * 100
+        )
+
+    return class_percentages
+
+
 def make_train_val_test_split(
     df: pd.DataFrame, root_processed_dataset_path: str
 ) -> None:
@@ -250,6 +272,22 @@ def make_train_val_test_split(
     LOGGER.info(f"Train data percentage: {len(df_train) / len(df) * 100:.2f}%")
     LOGGER.info(f"Validation data percentage: {len(df_val) / len(df) * 100:.2f}%")
     LOGGER.info(f"Test data percentage: {len(df_test) / len(df) * 100:.2f}%")
+
+    LOGGER.debug(
+        f"Class percentages for overall dataset: {compute_class_percentages(df)}"
+    )
+    LOGGER.debug(f"\n\n")
+    LOGGER.debug(
+        f"Class percentages for train dataset: {compute_class_percentages(df_train)}"
+    )
+    LOGGER.debug(f"\n\n")
+    LOGGER.debug(
+        f"Class percentages for validation dataset: {compute_class_percentages(df_val)}"
+    )
+    LOGGER.debug(f"\n\n")
+    LOGGER.debug(
+        f"Class percentages for test dataset: {compute_class_percentages(df_test)}"
+    )
 
     save_wafer_images(df_train, "train", root_processed_dataset_path)
     save_wafer_images(df_val, "val", root_processed_dataset_path)
