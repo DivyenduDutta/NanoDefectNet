@@ -32,5 +32,9 @@ ID_TO_TRAIN_TEST = {v: k for k, v in TRAIN_TEST_TO_ID.items()}
 
 class ModelType(Enum):
     RESNET152 = "ResNet152"
+    EFFICIENTNET_B0 = "EfficientNet_B0"
+    EFFICIENTNET_B1 = "EfficientNet_B1"
+    EFFICIENTNET_B2 = "EfficientNet_B2"
+    EFFICIENTNET_B3 = "EfficientNet_B3"
     EFFICIENTNET_B4 = "EfficientNet_B4"
     CCT = "CCT"
