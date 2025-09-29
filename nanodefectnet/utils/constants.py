@@ -34,3 +34,7 @@ class ModelType(Enum):
     RESNET152 = "ResNet152"
     EFFICIENTNET_B4 = "EfficientNet_B4"
     CCT = "CCT"
+
+
+class AugmentationModelType(Enum):
+    STABLE_DIFFUSION_V1_5 = "runwayml/stable-diffusion-v1-5"
