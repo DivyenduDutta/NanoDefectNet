@@ -61,3 +61,17 @@ Run only tests that can be run on CI - `pytest -m runonci`
 Run ALL tests - `pytest`
 
 Note : Anytime a pytest marker is added to a pytest, ensure it is registered in `pytest.ini` otherwise pytest will complain
+
+#### Data Augmentation using GenAI
+
+1. Configure accelerate (only once). Choose desired parameters.
+
+```bash
+accelerate config
+```
+
+2. Run LoRA fine tuning
+
+```bash
+accelerate launch .\nanodefectnet\scripts\GenAI\fine_tune_sd_with_lora.py
+```
