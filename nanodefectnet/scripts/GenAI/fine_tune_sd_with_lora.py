@@ -2,6 +2,7 @@ import os
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import CosineAnnealingLR
 from torchvision import datasets, transforms
 from diffusers import StableDiffusionPipeline, DDPMScheduler
 from accelerate import Accelerator
@@ -78,6 +79,11 @@ def fine_tune(
     device,
     output_dir: str,
 ):
+
+    lr_scheduler = CosineAnnealingLR(
+        optimizer, T_max=len(train_dataloader) * num_epochs
+    )
+
     for epoch in range(num_epochs):
         lora_unet.train()
         for step, (images, labels) in enumerate(train_dataloader):
@@ -138,6 +144,7 @@ def fine_tune(
                 # Backward + optimizer step
                 accelerator.backward(loss)
                 optimizer.step()
+                lr_scheduler.step()
                 optimizer.zero_grad()
 
             if step % 10 == 0:
