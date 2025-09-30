@@ -75,3 +75,9 @@ accelerate config
 ```bash
 accelerate launch .\nanodefectnet\scripts\GenAI\fine_tune_sd_with_lora.py
 ```
+
+3. Once LoRA weights have been saved, use it to generate augmented dataset
+
+```bash
+python .\nanodefectnet\scripts\GenAI\augment_train_dataset_genai.py
+```
