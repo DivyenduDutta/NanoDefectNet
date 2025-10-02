@@ -1,0 +1,21 @@
+dataset:
+  root_dataset_path: ./data/processed/
+  path_dataset_train: train
+  batch_size: 2
+model:
+  model_name: stable-diffusion-1-5
+  saving_dir_experiments: ./checkpoints/lora_finetuned_sd/
+  saving_dir_model: models
+  num_epoch: 5
+  lr: 0.0001
+  mixed_precision: fp16
+  lora:
+    r: 4
+    alpha: 16
+    target_modules:
+      - to_q
+      - to_v
+    dropout: 0.1
+    bias: none
+data:
+  size: 224
