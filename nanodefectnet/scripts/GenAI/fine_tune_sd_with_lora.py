@@ -1,6 +1,8 @@
 import os
+import argparse
 import torch
 import torch.nn.functional as F
+from typing import Dict, Any
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torchvision import datasets, transforms
@@ -8,6 +10,7 @@ from diffusers import StableDiffusionPipeline, DDPMScheduler
 from accelerate import Accelerator
 from peft import LoraConfig, get_peft_model
 from nanodefectnet.utils.constants import AugmentationModelType
+from nanodefectnet.utils.config_utils import load_config
 
 from nanodefectnet.utils.logger import LoggerConfig
 from nanodefectnet.data.dataloader import synchronize_labels
@@ -16,7 +19,9 @@ from nanodefectnet.utils.dir_utils import clean_create_dir
 LOGGER = LoggerConfig().logger
 
 
-def prepare_lora_unet(model_id: str, mixed_precision: str, device) -> torch.nn.Module:
+def prepare_lora_unet(
+    model_id: str, mixed_precision: str, device, cfg: Dict[Any, Any]
+) -> torch.nn.Module:
     # Load pipeline
     pipe = StableDiffusionPipeline.from_pretrained(
         model_id,
@@ -29,18 +34,20 @@ def prepare_lora_unet(model_id: str, mixed_precision: str, device) -> torch.nn.M
 
     # Apply LoRA to UNet
     config = LoraConfig(
-        r=4,  # rank of the LoRA matrices
-        lora_alpha=16,
-        target_modules=["to_q", "to_v"],  # attention layers
-        lora_dropout=0.1,
-        bias="none",
+        r=cfg["model"]["lora"]["r"],  # rank of the LoRA matrices
+        lora_alpha=cfg["model"]["lora"]["alpha"],
+        target_modules=cfg["model"]["lora"]["target_modules"],  # attention layers
+        lora_dropout=cfg["model"]["lora"]["dropout"],
+        bias=cfg["model"]["lora"]["bias"],
     )
     unet = get_peft_model(unet, config)
     return unet, pipe
 
 
-def get_dataloader(batch_size: int, train_data_dir: str) -> DataLoader:
-    image_size = 224
+def get_dataloader(
+    batch_size: int, train_data_dir: str, cfg: Dict[Any, Any]
+) -> DataLoader:
+    image_size = cfg["data"]["size"]
     basic_transform = transforms.Compose(
         [
             transforms.Resize((image_size, image_size)),
@@ -159,13 +166,25 @@ def fine_tune(
 
 if __name__ == "__main__":
 
-    # train dataset root path
-    train_dataset_dir = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
-        "data",
-        "processed",
-        "train",
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--path_config_file",
+        type=str,
+        help="Path of the LoRA training config file to use",
     )
+    opt = parser.parse_args()
+
+    # 1 - load config file
+    path_config_file = opt.path_config_file
+    LOGGER.info(f"Path of the model config file to use: {path_config_file}")
+
+    cfg = load_config(path_config_file)
+
+    # train dataset root path
+    root_dataset_path = cfg["dataset"]["root_dataset_path"]
+    path_dataset_train = cfg["dataset"]["path_dataset_train"]
+
+    train_dataset_dir = os.path.join(root_dataset_path, path_dataset_train)
 
     if not os.path.isdir(train_dataset_dir):
         LOGGER.error(f"Error: The directory '{train_dataset_dir}' does not exist")
@@ -173,20 +192,20 @@ if __name__ == "__main__":
 
     # Configurations for LoRA fine-tuning process
     model_id = AugmentationModelType.STABLE_DIFFUSION_V1_5.value
-    batch_size = 2
-    num_epochs = 5
-    learning_rate = 1e-4
-    mixed_precision = "fp16"  # "no", "fp16", or "bf16"
+    batch_size = cfg["dataset"]["batch_size"]
+    num_epochs = cfg["model"]["num_epoch"]
+    learning_rate = cfg["model"]["lr"]
+    mixed_precision = cfg["model"]["mixed_precision"]  # "no", "fp16", or "bf16"
 
     # 1. Setup Accelerator for distributed training
     accelerator = Accelerator(mixed_precision=mixed_precision)
     device = accelerator.device
 
     # 2. Add LoRA to pretrained SD model
-    lora_unet, pipe = prepare_lora_unet(model_id, mixed_precision, device)
+    lora_unet, pipe = prepare_lora_unet(model_id, mixed_precision, device, cfg)
 
     # 3. Prepare dataloader
-    dataloader, defect_classes = get_dataloader(batch_size, train_dataset_dir)
+    dataloader, defect_classes = get_dataloader(batch_size, train_dataset_dir, cfg)
 
     # 4. Prepare optimizer
     optimizer = torch.optim.AdamW(lora_unet.parameters(), lr=learning_rate)
@@ -197,12 +216,10 @@ if __name__ == "__main__":
         lora_unet, optimizer, dataloader
     )
 
-    output_dir = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
-        "checkpoints",
-        "lora_finetuned_sd",
-        "models",
-    )
+    saving_dir_experiments = cfg["model"]["saving_dir_experiments"]
+    saving_dir_model = cfg["model"]["saving_dir_model"]
+
+    output_dir = os.path.join(saving_dir_experiments, saving_dir_model)
 
     clean_create_dir(output_dir)
 
