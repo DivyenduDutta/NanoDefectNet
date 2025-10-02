@@ -73,7 +73,7 @@ accelerate config
 2. Run LoRA fine tuning
 
 ```bash
-accelerate launch .\nanodefectnet\scripts\GenAI\fine_tune_sd_with_lora.py
+accelerate launch .\nanodefectnet\scripts\GenAI\fine_tune_sd_with_lora.py --path_config_file=configs/genai/image_aug_sd_1_5.yaml
 ```
 
 3. Once LoRA weights have been saved, use it to generate augmented dataset
